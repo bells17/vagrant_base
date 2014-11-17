@@ -1,0 +1,26 @@
+---
+- name: get rbenv
+  git: repo=git://github.com/sstephenson/rbenv.git dest=/usr/local/rbenv update=no
+
+- name: get ruby-build
+  git: repo=git://github.com/sstephenson/ruby-build.git dest=/usr/local/rbenv/plugins/ruby-build update=no
+
+- name: set rbenv permission
+  file: path=/usr/local/rbenv mode=0777 recurse=yes state=directory
+
+- name: set rbenv env
+  copy: src=:etc:profile.d/rbenv.sh dest=/etc/profile.d/rbenv.sh
+
+- name: Is set default ruby version
+  shell: "ruby -v | awk -F ' ' '{print $2}' | grep {{ default_ruby_version }}; echo $?"
+  register: is_set_default_ruby_version
+
+- name: install default ruby version
+  shell: "rbenv install {{ default_ruby_version }}"
+  sudo_user: "{{ ansible_ssh_user }}"
+  when: is_set_default_ruby_version is defined and is_set_default_ruby_version == 1
+
+- name: set global default ruby version
+  shell: "rbenv global {{ default_ruby_version }}"
+  sudo_user: "{{ ansible_ssh_user }}"
+  when: is_set_default_ruby_version is defined and is_set_default_ruby_version == 1

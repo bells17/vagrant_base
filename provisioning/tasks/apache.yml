@@ -1,0 +1,66 @@
+---
+# Install apache 
+- name: be sure httpd is installed
+  yum: name={{ item }} state=installed
+  with_items:
+    - apr
+    - apr-util
+    - pcre-devel
+    - lynx
+    - httpd
+    - httpd-devel
+    - mod_ssl
+
+- name: be sure httpd is running and enabled
+  service: name=httpd state=running enabled=yes
+
+
+# Setting httpd.conf 
+- name: Ensure php type handler is set
+  lineinfile: dest=/etc/httpd/conf/httpd.conf regexp="AddType\ application\/x-httpd-php\ \.php" line="AddType application/x-httpd-php .php"
+  notify: restart apache
+
+- name: Ensure phps type handler is set
+  lineinfile: dest=/etc/httpd/conf/httpd.conf regexp="AddType\ application\/x-httpd-php-source\ \.phps" line="AddType application/x-httpd-php-source .phps"
+  notify: restart apache
+
+- name: Ensure Directory index lookup index.php
+  lineinfile: dest=/etc/httpd/conf/httpd.conf regexp="DirectoryIndex\ index\.php" line="DirectoryIndex index.php"
+  notify: restart apache
+
+- name: Ensure ServerName is set
+  lineinfile: dest=/etc/httpd/conf/httpd.conf regexp=^ServerName line="ServerName localhost:80"
+  notify: restart apache
+
+- name: disable apache javascript caching
+  lineinfile: regexp="^EnableMMAP off" line="EnableMMAP off" dest=/etc/httpd/conf/httpd.conf
+  notify: restart apache
+
+- name: disable apache javascript caching
+  lineinfile: regexp="^EnableSendfile off" line="EnableSendfile off" dest=/etc/httpd/conf/httpd.conf
+  notify: restart apache
+
+
+# Enusre Set base httpd conf file
+- name: Check exist backup base httpd conf file
+  shell: /etc/httpd/conf/httpd.conf.org; echo $?
+  register: is_copied_base_httpd_conf_file
+
+- name: Ensure backup base httpd conf file
+  shell: cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.org
+  when: is_copied_base_httpd_conf_file != 0
+
+- name: Set base httpd conf file
+  template: src=templates/httpd.conf.j2 dest=/etc/httpd/conf/httpd.conf
+
+# vhost setting
+- name: Ensure default vhost.conf is disabled
+  file: path=/etc/httpd/conf.d/vhost.conf state=absent
+
+- name: Ensure vhost is enabled
+  template: src=templates/vhost.conf.j2 dest=/etc/httpd/conf.d/vhost_{{ target_domain }}.conf
+  notify: restart apache
+
+# be sure apache log dir createed
+- name: Ensure log directory is present
+  file: path=/var/log/httpd state=directory owner=apache group=apache

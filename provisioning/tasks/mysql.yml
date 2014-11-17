@@ -1,0 +1,7 @@
+---
+- name: be sure mysql is installed
+  yum: name={{ item }} state=installed
+  with_items:
+    - mysql
+    - mysql-devel
+    - mysql-utilities

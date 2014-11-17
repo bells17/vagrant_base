@@ -1,0 +1,8 @@
+---
+- name: install haskell-platform
+  yum: name={{ item }} state=installed
+  with_items:
+    - haskell-platform
+
+- name: update cabal
+  shell: cabal update

@@ -1,0 +1,12 @@
+<Virtualhost *:80>
+  ServerName {{ target_domain }}
+  DocumentRoot {{ document_root }}
+  CustomLog "|/usr/sbin/rotatelogs /var/log/httpd/{{ target_domain }}-access_log.%Y%m%d 86400 540" combined env=!no_log
+  ErrorLog "|/usr/sbin/rotatelogs /var/log/httpd/{{ target_domain }}-error_log.%Y%m%d 86400 540"
+  <Directory {{ document_root }}>
+     AllowOverride All
+     Order deny,allow
+     Allow From all
+     #Require all granted
+  </Directory>
+</Virtualhost>

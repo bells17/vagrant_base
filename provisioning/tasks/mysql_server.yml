@@ -1,0 +1,15 @@
+---
+# mysql
+- name: be sure mysql is installed
+  yum: name={{ item }} state=installed
+  with_items:
+    - mysql-server
+    - MySQL-python
+
+- name: be sure mysqld is running and enabled
+  service: name=mysqld state=running enabled=yes
+
+# my.cnf
+- name: Ensure MySQL conf file is set
+  template: src=templates/my.cnf.j2 dest=/etc/my.cnf
+  notify: restart mysql

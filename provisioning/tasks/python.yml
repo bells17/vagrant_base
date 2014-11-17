@@ -1,0 +1,12 @@
+---
+- name: get pyenv
+  git: repo=git://github.com/yyuu/pyenv.git dest=/usr/local/pyenv update=no
+
+- name: get pyenv-virtualenv
+  git: repo=git://github.com/yyuu/pyenv-virtualenv.git dest=/usr/local/pyenv/plugins/pyenv-virtualenv update=no
+
+- name: set pyenv permission
+  file: path=/usr/local/pyenv mode=0777 recurse=yes state=directory
+
+- name : set pyenv env
+  copy: src=:etc:profile.d/pyenv.sh dest=/etc/profile.d/pyenv.sh

@@ -1,0 +1,12 @@
+---
+- name: be sure java is installed
+  yum: name={{ item }} state=installed
+  with_items:
+    - java-1.6.0-openjdk-devel
+    - java-1.6.0-openjdk
+
+- name: Download sbt from rpm
+  get_url: url=https://dl.bintray.com/sbt/rpm/sbt-0.13.6.rpm dest=/tmp/
+
+- name: Install sbt
+  command: rpm -Uvh --force /tmp/sbt-0.13.6.rpm

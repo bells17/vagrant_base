@@ -1,0 +1,13 @@
+---
+- name: install perl-ExtUtils-MakeMaker
+  yum: name={{ item }} state=installed
+  with_items:
+    - perl-ExtUtils-MakeMaker
+
+- name: get perlbrew
+  shell: "export PERLBREW_ROOT='/usr/local/perlbrew' && curl -kL http://install.perlbrew.pl | bash -"
+
+- name: set nodebrew permission
+  shell: chmod -R 777 /usr/local/perlbrew
+
+#TODO install & setting

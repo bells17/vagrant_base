@@ -1,0 +1,16 @@
+---
+- name: be sure php is installed
+  yum: name={{ item }} state=installed enablerepo=remi,remi-php55
+  with_items:
+    - php
+    - php-devel
+    - php-cli
+    - php-common
+    - php-pear
+    - php-pecl-jsonc
+    - php-pecl-zip
+    - php-process
+    - php-xml
+    - php-mysql
+    - php-mbstring
+    - php-pgsql

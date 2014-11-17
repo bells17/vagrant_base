@@ -1,0 +1,12 @@
+---
+- name: Ensure password authentication is disabled
+  lineinfile: dest=/etc/ssh/sshd_config regexp=^PasswordAuthentication line="PasswordAuthentication no"
+  notify: restart sshd
+
+- name: Ensure allow public key authentication
+  lineinfile: dest=/etc/ssh/sshd_config regexp=^RSAAuthentication line="RSAAuthentication yes"
+  notify: restart sshd
+
+- name: Ensure password authentication is disabled
+  lineinfile: dest=/etc/ssh/sshd_config regexp=^PubkeyAuthentication line="PubkeyAuthentication yes"
+  notify: restart sshd

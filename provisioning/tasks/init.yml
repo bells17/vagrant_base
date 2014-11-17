@@ -1,0 +1,77 @@
+---
+- name: Ensure root default shell is bash
+  shell: cat /etc/passwd | grep ^root | grep bash$; echo $?
+  register: is_set_bash
+
+- name: Ensure root default shell is bash
+  shell: chsh -s /bin/bash
+  when: is_set_bash.stdout == "1"
+
+- name: Ensure set timezone JST
+  shell: rm -f /etc/localtime && cp -p /usr/share/zoneinfo/Japan /etc/localtime
+
+
+# yum
+- name: Download EPEL repo.
+  get_url: url=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm dest=/tmp/
+
+- name: Install EPEL repo.
+  command: rpm -Uvh --force /tmp/epel-release-6-8.noarch.rpm creates=/etc/yum.repos.d/epel.repo
+
+- name: Download Remi repo.
+  get_url: url=http://rpms.famillecollet.com/enterprise/remi-release-6.rpm dest=/tmp/
+
+- name: Install Remi repo.
+  command: rpm -Uvh --force /tmp/remi-release-6.rpm creates=/etc/yum.repos.d/remi.repo
+
+- name: be sure common package is installed
+  yum: name={{ item }} state=installed
+  with_items:
+    - yum-fastestmirror
+    - gcc
+    - make
+    - pcre 
+    - pcre-devel
+    - rpm-build
+    - wget
+    - unzip
+    - ftp
+    - curl
+    - git
+    - tar
+    - which
+    - crontabs
+    - gzip
+    - llvm
+    - zlib-devel
+    - bzip2
+    - bzip2-devel
+    - readline-devel
+    - sqlite-devel
+    - openssl-devel
+    - vim
+    - zsh
+    - tree
+    - dstat
+    - iotop
+    - iftop
+    - nethogs
+    - ansible
+
+
+- name: is installed silver searcher.
+  shell: ag --version; echo $?
+  register: is_installed_silver_searcher
+
+- name: Install silver searcher.
+  command: rpm -ivh http://swiftsignal.com/packages/centos/6/x86_64/the-silver-searcher-0.13.1-1.el6.x86_64.rpm
+  when: is_installed_silver_searcher.stdout == "1"
+
+
+- name: Is installed loglotate
+  shell:  rpm -q logrotate | grep logrotate; echo $?
+  register: is_installed_loglotate
+
+- name: Ensure install loglotate
+  shell: rpm -ivh logrotate-3.6.8-1.i386.rpm
+  when: is_installed_loglotate.stdout == "1"

@@ -1,0 +1,31 @@
+---
+- hosts: local
+  sudo: yes
+  vars_files:
+    - vars/local.yml
+
+  tasks:
+    - include: tasks/init.yml
+    - include: tasks/sshd.yml
+    - include: tasks/apache.yml
+    - include: tasks/mysql.yml
+    - include: tasks/mysql_server.yml
+    - include: tasks/php.yml
+    - include: tasks/sbt.yml
+    - include: tasks/python.yml
+    - include: tasks/ruby.yml
+    - include: tasks/haskell.yml
+    - include: tasks/erlang.yml
+    - include: tasks/nodejs.yml
+    - include: tasks/perl.yml
+    - include: tasks/local_hosts.yml
+
+  handlers:
+    - name: restart mysql
+      service: name=mysqld state=restarted
+
+    - name: restart apache
+      service: name=httpd state=restarted
+
+    - name: restart sshd
+      service: name=sshd state=restarted

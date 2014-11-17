@@ -1,0 +1,5 @@
+---
+- name: install erlang OPT
+  yum: name={{ item }} state=installed
+  with_items:
+    - erlang

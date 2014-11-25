@@ -2,11 +2,20 @@
 - name: be sure java is installed
   yum: name={{ item }} state=installed
   with_items:
-    - java-1.6.0-openjdk-devel
-    - java-1.6.0-openjdk
+    - java-1.7.0-openjdk
+    - java-1.7.0-openjdk-devel
 
 - name: Download sbt from rpm
-  get_url: url=https://dl.bintray.com/sbt/rpm/sbt-0.13.6.rpm dest=/tmp/
+  get_url: url=https://dl.bintray.com/sbt/rpm/sbt-0.13.7.rpm dest=/tmp/
 
 - name: Install sbt
-  command: rpm -Uvh --force /tmp/sbt-0.13.6.rpm
+  command: rpm -Uvh --force --nodeps /tmp/sbt-0.13.7.rpm
+
+- name: Set typesafe
+  copy: src=:etc:yum.repos.d/typesafe.repo dest=/etc/yum.repos.d/typesafe.repo
+
+- name: be sure scala is installed
+  yum: name={{ item }} state=installed
+  with_items:
+    - scala
+

@@ -10,6 +10,11 @@
 - name: Ensure set timezone JST
   shell: rm -f /etc/localtime && cp -p /usr/share/zoneinfo/Japan /etc/localtime
 
+- name: Ensure set LC_ALL
+  lineinfile: dest=/etc/sysconfig/i18n regexp='^LC_ALL="ja_JP.utf8"' line='LC_ALL="ja_JP.utf8"'
+
+- name: Ensure set LANG
+  lineinfile: dest=/etc/sysconfig/i18n regexp='^LANG="en_US.UTF-8"' line='LANG="en_US.UTF-8"'
 
 # yum
 - name: Download EPEL repo.
@@ -42,36 +47,10 @@
     - which
     - crontabs
     - gzip
-    - llvm
-    - zlib-devel
-    - bzip2
-    - bzip2-devel
-    - readline-devel
-    - sqlite-devel
-    - openssl-devel
-    - vim
-    - zsh
-    - tree
-    - dstat
-    - iotop
-    - iftop
-    - nethogs
-    - ansible
+    - glibc-common
 
+# - name: be sure clean yum cache
+#   command: yum clean all
 
-- name: is installed silver searcher.
-  shell: ag --version; echo $?
-  register: is_installed_silver_searcher
-
-- name: Install silver searcher.
-  command: rpm -ivh http://swiftsignal.com/packages/centos/6/x86_64/the-silver-searcher-0.13.1-1.el6.x86_64.rpm
-  when: is_installed_silver_searcher.stdout == "1"
-
-
-- name: Is installed loglotate
-  shell:  rpm -q logrotate | grep logrotate; echo $?
-  register: is_installed_loglotate
-
-- name: Ensure install loglotate
-  shell: rpm -ivh logrotate-3.6.8-1.i386.rpm
-  when: is_installed_loglotate.stdout == "1"
+# - name: be sure update to latested bash version
+#   yum: name=bash state=latest

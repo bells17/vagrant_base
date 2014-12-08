@@ -9,4 +9,7 @@
      Allow From all
      #Require all granted
   </Directory>
+  {% if is_local is defined %}
+  EnableSendfile off
+  {% endif %}
 </Virtualhost>

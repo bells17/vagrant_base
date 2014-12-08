@@ -6,25 +6,30 @@
   shell: /etc/profile.d/nodebrew.sh
 
 - name: is exist nodebrew
-  shell: ls /usr/local/nodebrew/nodebrew | echo $?
+  shell: test -e /usr/local/nodebrew/nodebrew | echo $?
   register: is_exist_nodebrew
 
 - name: get nodebrew
   shell: curl https://raw.githubusercontent.com/hokaccha/nodebrew/master/nodebrew | perl - setup
-  when: is_exist_nodebrew.stdout != 0
+  when: is_exist_nodebrew.stdout != '0'
 
 - name: move nodebrew
   shell: mv /root/.nodebrew /usr/local/nodebrew
-  when: is_exist_nodebrew.stdout != 0
+  when: is_exist_nodebrew.stdout != '0'
 
 - name: set nodebrew permission
   shell: chmod -R 777 /usr/local/nodebrew
-  when: is_exist_nodebrew.stdout != 0
+  when: is_exist_nodebrew.stdout != '0'
+
+- name: default nodebrew version is
+  shell: NODEBREW_ROOT=/usr/local/nodebrew /usr/local/nodebrew/nodebrew list | grep current
+  register: default_nodebrew_version_is
 
 - name: install default nodejs
   shell: NODEBREW_ROOT=/usr/local/nodebrew /usr/local/nodebrew/nodebrew install-binary {{ default_nodejs_version }}
-  when: is_exist_nodebrew.stdout != 0
+  when: "default_nodebrew_version_is.stdout != 'current: {{ default_nodejs_version }}'"
+  ignore_errors: true
 
 - name: set default nodejs
   shell: NODEBREW_ROOT=/usr/local/nodebrew /usr/local/nodebrew/nodebrew use {{ default_nodejs_version }}
-  when: is_exist_nodebrew.stdout != 0
+  when: "default_nodebrew_version_is.stdout != 'current: {{ default_nodejs_version }}'"

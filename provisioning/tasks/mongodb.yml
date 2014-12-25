@@ -1,0 +1,8 @@
+---
+- name: Set mongodb repo
+  copy: src=:etc:yum.repos.d/mongodb.repo dest=/etc/yum.repos.d/mongodb.repo
+
+- name: be sure mongodb is installed
+  yum: name={{ item }} state=installed
+  with_items:
+    - mongodb-org

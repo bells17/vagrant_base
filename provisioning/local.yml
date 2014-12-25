@@ -10,6 +10,7 @@
     - include: tasks/apache.yml
     - include: tasks/mysql.yml
     - include: tasks/mysql_server.yml
+    - include: tasks/mongodb.yml
     - include: tasks/php.yml
     - include: tasks/sbt.yml
     - include: tasks/python.yml

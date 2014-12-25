@@ -11,10 +11,14 @@
   shell: rm -f /etc/localtime && cp -p /usr/share/zoneinfo/Japan /etc/localtime
 
 - name: Ensure set LC_ALL
-  lineinfile: dest=/etc/sysconfig/i18n regexp='^LC_ALL="ja_JP.utf8"' line='LC_ALL="ja_JP.utf8"'
+  lineinfile: dest=/etc/sysconfig/i18n regexp='^LC_ALL="en_US.UTF-8"' line='LC_ALL="en_US.UTF-8"'
 
 - name: Ensure set LANG
   lineinfile: dest=/etc/sysconfig/i18n regexp='^LANG="en_US.UTF-8"' line='LANG="en_US.UTF-8"'
+
+- name: set locale env
+  copy: src=:etc:profile.d/locale.sh dest=/etc/profile.d/locale.sh
+
 
 # yum
 - name: Download EPEL repo.
@@ -49,8 +53,3 @@
     - gzip
     - glibc-common
 
-# - name: be sure clean yum cache
-#   command: yum clean all
-
-# - name: be sure update to latested bash version
-#   yum: name=bash state=latest

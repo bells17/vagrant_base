@@ -1,9 +1,9 @@
 ---
 - name: get rbenv
-  git: repo=git://github.com/sstephenson/rbenv.git dest=/usr/local/rbenv update=no
+  git: repo=https://github.com/sstephenson/rbenv.git dest=/usr/local/rbenv update=no
 
 - name: get ruby-build
-  git: repo=git://github.com/sstephenson/ruby-build.git dest=/usr/local/rbenv/plugins/ruby-build update=no
+  git: repo=https://github.com/sstephenson/ruby-build.git dest=/usr/local/rbenv/plugins/ruby-build update=no
 
 - name: set rbenv permission
   file: path=/usr/local/rbenv mode=0777 recurse=yes state=directory

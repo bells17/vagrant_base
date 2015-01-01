@@ -6,7 +6,7 @@
   shell: /etc/profile.d/nodebrew.sh
 
 - name: is exist nodebrew
-  shell: test -e /usr/local/nodebrew/nodebrew | echo $?
+  shell: test -e /usr/local/nodebrew/nodebrew; echo $?
   register: is_exist_nodebrew
 
 - name: get nodebrew

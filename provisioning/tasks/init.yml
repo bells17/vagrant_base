@@ -19,6 +19,8 @@
 - name: set locale env
   copy: src=:etc:profile.d/locale.sh dest=/etc/profile.d/locale.sh
 
+- name: Ensure exist home .ssh directory
+  file: path=~/.ssh state=directory
 
 # yum
 - name: Download EPEL repo.
